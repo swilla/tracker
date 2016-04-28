@@ -488,7 +488,7 @@ class ServiceProvider extends PragmaRXServiceProvider {
 		{
 			$router->group($filters, function() use ($prefix, $router)
 			{
-				$router->group(['prefix' => $prefix], function($router)
+				$router->group(['prefix' => $prefix, 'middleware' => 'web'], function($router)
 				{
 					$router->get('/', array('as' => 'tracker.stats.index', 'uses' => 'Stats@index'));
 
