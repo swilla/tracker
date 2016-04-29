@@ -233,7 +233,22 @@ class Tracker
         $this->parserIsAvailable() &&
         $this->isTrackableIp() &&
         $this->isTrackableEnvironment() &&
-        $this->notRobotOrTrackable();
+        $this->notRobotOrTrackable() &&
+        $this->isTrackableRoute();
+    }
+
+    protected function isTrackableRoute() {
+        if (is_null(\Request::path())) {
+                return true;
+        }
+        $routes = $this->config->get('do_not_track_routes');
+        foreach ($routes as $route) {
+                $match = preg_grep ('/'. $route .'/i', [\Request::path()]);
+                if(!empty($match)){
+                    return false;
+                }
+        }
+        return true;
     }
 
     protected function isTrackableEnvironment() {
