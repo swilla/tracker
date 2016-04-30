@@ -312,7 +312,9 @@ class ServiceProvider extends PragmaRXServiceProvider {
 
 	            $systemClassRepository,
 
-		        $crawlerDetect
+		        $crawlerDetect,
+
+		        new PhpSession()
             );
         });
     }

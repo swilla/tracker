@@ -32,6 +32,7 @@ use PragmaRX\Tracker\Data\Repositories\SqlQueryBinding;
 use PragmaRX\Tracker\Data\Repositories\RoutePathParameter;
 use PragmaRX\Tracker\Data\Repositories\SqlQueryBindingParameter;
 use PragmaRX\Tracker\Data\Repositories\GeoIp as GeoIpRepository;
+use PragmaRX\Support\PhpSession;
 
 class RepositoryManager implements RepositoryManagerInterface
 {
@@ -155,8 +156,11 @@ class RepositoryManager implements RepositoryManagerInterface
         Event $eventRepository,
         EventLog $eventLogRepository,
         SystemClass $systemClassRepository,
-        CrawlerDetector $crawlerDetector
+        CrawlerDetector $crawlerDetector,
+        PhpSession $phpSession
     ) {
+        $this->mobile_user_id = $phpSession->get('mobile_user_id');
+
         $this->authentication = $authentication;
 
         $this->mobileDetect = $mobileDetect;
@@ -326,7 +330,13 @@ class RepositoryManager implements RepositoryManagerInterface
     }
 
     public function getCurrentUserId() {
-        return $this->authentication->getCurrentUserId();
+        $user_id = $this->authentication->getCurrentUserId();
+        if(is_null($user_id)){
+            if(!is_null($this->mobile_user_id)){
+                $user_id = $this->mobile_user_id;
+            }
+        }
+        return $user_id;
     }
 
     /**
